@@ -25,7 +25,6 @@ function FeatureCard({
 
 export default function Home() {
   const handleSpotifyLogin = async () => {
-    alert("Spotify login clicked!");
     try {
       const response = await fetch("http://localhost:8000/auth/spotify");
       const data = await response.json();

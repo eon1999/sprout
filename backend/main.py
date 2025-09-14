@@ -154,35 +154,48 @@ def get_taste_profile(access_token: str):
 @app.get("/recommendations")
 def get_recommendations(access_token: str):
     try:
+        seen_artists = set()
         sp = spotipy.Spotify(auth=access_token)
         
-        seed_artists = sp.current_user_top_artists(limit=10, time_range='short_term')
+        seed_artists = sp.current_user_top_artists(limit=15, time_range='short_term')
         top_artists = sp.current_user_top_artists(limit=20, time_range='short_term')
         if not seed_artists['items']:
             return {"error": "No top artists found for user."}
         
         all_recommendations = []
         
-        for artist in seed_artists['items']:
-            
-            similar_artist_names = get_similar_artists_from_lastfm(artist['name'], limit=5)
-            
-            for artist_name in similar_artist_names:
-                spotify_artist = search_spotify_artist(sp, artist_name)
-                if not spotify_artist:
-                    continue
-                if not is_niche_enough(spotify_artist['popularity']):
-                    continue
-                if not is_artist_novel(sp, spotify_artist['id'], top_artists['items']):
-                    continue
+        while len(all_recommendations) < 20:
+            found_new_rec = False
+            for artist in seed_artists['items']:
+                if len(all_recommendations) >= 20:
+                    break
                 
-                track = get_random_track_from_artist(sp, spotify_artist['id'])
-                if not track:
-                    continue
+                similar_artist_names = get_similar_artists_from_lastfm(artist['name'], limit=5)
                 
-                recommendation = create_recommendation_object(spotify_artist, track)
-                all_recommendations.append(recommendation)
-                
+                for artist_name in similar_artist_names:
+                    if len(all_recommendations) >= 20:
+                        break
+                    spotify_artist = search_spotify_artist(sp, artist_name)
+                    
+                    if not spotify_artist:
+                        continue
+                    if spotify_artist['name'] in seen_artists:
+                        continue
+                    if not is_niche_enough(spotify_artist['popularity']):
+                        continue
+                    if not is_artist_novel(sp, spotify_artist['id'], top_artists['items']):
+                        continue
+                    
+                    seen_artists.add(spotify_artist['name'])
+                    
+                    track = get_random_track_from_artist(sp, spotify_artist['id'])
+                    if track:
+                        recommendation = create_recommendation_object(spotify_artist, track)
+                        all_recommendations.append(recommendation)
+                        found_new_rec = True
+            if not found_new_rec:
+                break
+
         return {"recommendations": all_recommendations}
     except Exception as e:
         return {"error": str(e)}
