@@ -8,7 +8,7 @@ export default function RecommendationsPage() {
     artist_name: string;
     artist_popularity: number;
     track_external_url: string;
-    track_name: String;
+    track_name: string;
   };
 
   const [token, setToken] = useState<string | null>(null);
