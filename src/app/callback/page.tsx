@@ -32,7 +32,7 @@ function CallbackContent() {
 export default function Callback() {
   return (
     <Suspense fallback={<div>Loading...</div>}>
-      <CallbackContent />
+      <CallbackContent/>
     </Suspense>
   )
 }
