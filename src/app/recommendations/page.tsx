@@ -3,8 +3,16 @@
 import { useState, useEffect } from "react";
 
 export default function RecommendationsPage() {
+  type Recommendation = {
+    artist_genres: [];
+    artist_name: string;
+    artist_popularity: number;
+    track_external_url: string;
+    track_name: String;
+  };
+
   const [token, setToken] = useState<string | null>(null);
-  const [recommendations, setRecommendations] = useState([]);
+  const [recommendations, setRecommendations] = useState<Recommendation[]>([]);
   const [loading, setLoading] = useState(false);
 
   const loadingMessages = [
@@ -97,6 +105,16 @@ export default function RecommendationsPage() {
                 <h2 className="text-2xl font-bold text-green-700">
                     {rec.artist_name}
                 </h2>
+                <div className="flex flex-row items-center flex-wrap justify-center gap-2">
+                  {rec.artist_genres.map((genre,idx) => (
+                    <div key = {idx} >
+                      <p className = "text-green-800">
+                        {genre}
+                      </p>
+                    </div>
+                  ))}
+                </div>
+                
 
                 <iframe
                   src={`https://open.spotify.com/embed/track/${rec.track_external_url.split('/track/')[1]}`}
