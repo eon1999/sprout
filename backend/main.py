@@ -106,11 +106,12 @@ def spotify_callback(code: str):
     try: 
         token_info = spotify_oauth.get_access_token(code)
         access_token = token_info['access_token']
+        nexturl = os.getenv("NEXT_PUBLIC_API_URL")
         
-        frontend_url = f"http://localhost:3000/callback?token={access_token}"
+        frontend_url = f"{nexturl}/callback?token={access_token}"
         return RedirectResponse(url=frontend_url)
     except Exception as e:
-        return RedirectResponse(url=f"http://localhost:3000/error=auth_failed")
+        return RedirectResponse(url=f"{nexturl}/error=auth_failed")
 
 @app.get("/user/top-artists")
 def get_top_artists(access_token: str):
