@@ -26,7 +26,7 @@ function FeatureCard({
 export default function Home() {
   const handleSpotifyLogin = async () => {
     try {
-      const response = await fetch(`${process.env.REACT_APP_API_URL}/auth/spotify`);
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/spotify`);
       const data = await response.json();
       if (data.auth_url) {
         window.location.href = data.auth_url;

@@ -49,7 +49,7 @@ export default function RecommendationsPage() {
     setLoading(true);
     try {
       const response = await fetch(
-        `${process.env.REACT_APP_API_URL}/recommendations?access_token=${token}`
+        `${process.env.NEXT_PUBLIC_API_URL}/recommendations?access_token=${token}`
       );
       const data = await response.json();
       setRecommendations(data.recommendations);
