@@ -105,35 +105,38 @@ export default function RecommendationsPage() {
           <div className="max-w-4xl mx-auto text-center bg-green-300 p-8 rounded-2xl shadow-md">
             <h1 className="text-white font-bold text-4xl">Found it!</h1>
           </div>
-          {recommendations.map((rec, index) => (
-            <div
-              key={index}
-              className="p-2 bg-emerald-100 rounded-lg shadow-md text-center my-4"
-            >
-              <h2 className="text-2xl font-bold text-green-700">
-                {rec.artist_name}
-              </h2>
-              <div className="flex flex-row items-center flex-wrap justify-center gap-2">
-                {rec.artist_genres.map((genre, idx) => (
-                  <div key={idx}>
-                    <p className="text-green-800">{genre}</p>
-                  </div>
-                ))}
-              </div>
+          {recommendations.map((rec, index) => {
+            console.log("Track URL:", rec.track_external_url);
+            return (
+              <div
+                key={index}
+                className="p-2 bg-emerald-100 rounded-lg shadow-md text-center my-4"
+              >
+                <h2 className="text-2xl font-bold text-green-700">
+                  {rec.artist_name}
+                </h2>
+                <div className="flex flex-row items-center flex-wrap justify-center gap-2">
+                  {rec.artist_genres.map((genre, idx) => (
+                    <div key={idx}>
+                      <p className="text-green-800">{genre}</p>
+                    </div>
+                  ))}
+                </div>
 
-              <iframe
-                src={`https://open.spotify.com/embed/track/${
-                  rec.track_external_url.split("/track/")[1]
-                }`}
-                width="100%"
-                height="90"
-                frameBorder="0"
-                allow="autoplay; clipboard-write; encrypted-media; picture-in-picture"
-                loading="lazy"
-                className="my-2 rounded"
-              />
-            </div>
-          ))}
+                <iframe
+                  src={`https://open.spotify.com/embed/track/${
+                    rec.track_external_url.split("/track/")[1]
+                  }`}
+                  width="100%"
+                  height="90"
+                  frameBorder="0"
+                  allow="autoplay; clipboard-write; encrypted-media; picture-in-picture"
+                  loading="lazy"
+                  className="my-2 rounded"
+                />
+              </div>
+            );
+          })}
         </div>
       )}
     </main>
