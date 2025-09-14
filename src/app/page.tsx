@@ -50,7 +50,7 @@ export default function Home() {
     {
       emoji: "🔥",
       title: "be ahead of the curve",
-      description: "discover tomorrow's stars. before they blow up on everyone's for you page."
+      description: "discover tomorrows star&apos;s. before they blow up on everyone&apos;s for you page."
     }
   ]
 
@@ -64,7 +64,7 @@ export default function Home() {
         <p className="text-lg text-green-800 mb-2">
           Find underground artists on Spotify to impress your friends.
           <br />
-          We know you wanna be cool. Sprout's here to help.
+          We know you wanna be cool. Sprout%apos;s here to help.
         </p>
       </div>
 

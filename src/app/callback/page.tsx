@@ -12,7 +12,7 @@ export default function Callback() {
             localStorage.setItem("spotify_token", token);
             router.push("/recommendations");
         }
-    }, []);
+    }, [searchParams, router]);
 
     return (
     <div className="p-8 bg-lime-100 min-h-screen flex items-center justify-center">
