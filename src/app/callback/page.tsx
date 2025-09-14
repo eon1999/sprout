@@ -3,7 +3,7 @@ import { useEffect } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import { Suspense } from "react";
 
-export default function Callback() {
+function CallbackContent() {
   const searchParams = useSearchParams();
   const router = useRouter();
 
@@ -16,7 +16,6 @@ export default function Callback() {
   }, [searchParams, router]);
 
   return (
-    <Suspense fallback={<div>Loading...</div>}>
       <div className="p-8 bg-lime-100 min-h-screen flex items-center justify-center">
         <div className="text-center">
           <h1 className="text-2xl font-bold text-green-700">
@@ -27,6 +26,13 @@ export default function Callback() {
           </p>
         </div>
       </div>
-    </Suspense>
   );
+}
+
+export default function Callback() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <CallbackContent />
+    </Suspense>
+  )
 }
