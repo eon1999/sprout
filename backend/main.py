@@ -159,6 +159,8 @@ def get_recommendations(access_token: str):
         sp = spotipy.Spotify(auth=access_token)
         
         seed_artists = sp.current_user_top_artists(limit=15, time_range='short_term')
+        seed_items = seed_artists['items']
+        random.shuffle(seed_items)
         top_artists = sp.current_user_top_artists(limit=20, time_range='short_term')
         if not seed_artists['items']:
             return {"error": "No top artists found for user."}
@@ -167,7 +169,7 @@ def get_recommendations(access_token: str):
         
         while len(all_recommendations) < 20:
             found_new_rec = False
-            for artist in seed_artists['items']:
+            for artist in seed_items:
                 if len(all_recommendations) >= 20:
                     break
                 
