@@ -154,6 +154,8 @@ def get_taste_profile(access_token: str):
     
 @app.get("/recommendations")
 def get_recommendations(access_token: str):
+    print("Received access_token:", access_token)
+    
     try:
         seen_artists = set()
         sp = spotipy.Spotify(auth=access_token)
@@ -162,6 +164,8 @@ def get_recommendations(access_token: str):
         seed_items = seed_artists['items']
         random.shuffle(seed_items)
         top_artists = sp.current_user_top_artists(limit=20, time_range='short_term')
+        
+        print("Top artists:", [artist['name'] for artist in top_artists['items']])
         if not seed_artists['items']:
             return {"error": "No top artists found for user."}
         
