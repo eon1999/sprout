@@ -82,7 +82,7 @@ def search_spotify_artist(sp, artist_name: str):
         print(f"Error searching for artist {artist_name}: {e}")
         return None
 
-def is_niche_enough(artist_popularity: int, threshold: int = 50) -> bool:
+def is_niche_enough(artist_popularity: int, threshold: int = 70) -> bool:
     return artist_popularity <= threshold
 
 def is_artist_novel(sp, artist_id: str, user_top_artists: list) -> bool:
@@ -156,10 +156,13 @@ def get_taste_profile(access_token: str):
 def get_recommendations(access_token: str):
     print("Received access_token:", access_token)
     
+
     try:
         seen_artists = set()
         sp = spotipy.Spotify(auth=access_token)
         
+        user_profile = sp.current_user()
+        print("User ID:", user_profile['id'])
         seed_artists = sp.current_user_top_artists(limit=15, time_range='short_term')
         seed_items = seed_artists['items']
         random.shuffle(seed_items)
