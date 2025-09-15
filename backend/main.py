@@ -166,6 +166,7 @@ def get_recommendations(access_token: str):
         top_artists = sp.current_user_top_artists(limit=20, time_range='short_term')
         
         print("Top artists:", [artist['name'] for artist in top_artists['items']])
+        print(f"Seed artist: {artist['name']}, Similar from Last.fm: {similar_artist_names}")
         if not seed_artists['items']:
             return {"error": "No top artists found for user."}
         
