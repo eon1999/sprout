@@ -10,8 +10,10 @@ import random
 
 load_dotenv()
 
+# create fastAPI instance
 app = FastAPI()
 
+# configures CORS to allow the frontend to talk to the backend
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -25,6 +27,7 @@ spotify_oauth = SpotifyOAuth(
     client_secret=os.getenv("SPOTIFY_CLIENT_SECRET"),
     redirect_uri=os.getenv("SPOTIFY_REDIRECT_URI"),
     scope="user-top-read user-library-read user-read-recently-played user-read-private",
+    cache_handler=None,
 )
 
 # Helper function to get a random track from an artist's top tracks
