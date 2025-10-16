@@ -7,6 +7,7 @@ import spotipy
 from spotipy.oauth2 import SpotifyOAuth
 import requests
 import random
+import secrets
 
 load_dotenv()
 
@@ -20,14 +21,6 @@ app.add_middleware(
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
-)
-
-spotify_oauth = SpotifyOAuth(
-    client_id=os.getenv("SPOTIFY_CLIENT_ID"),
-    client_secret=os.getenv("SPOTIFY_CLIENT_SECRET"),
-    redirect_uri=os.getenv("SPOTIFY_REDIRECT_URI"),
-    scope="user-top-read user-library-read user-read-recently-played user-read-private",
-    cache_handler=None,
 )
 
 # Helper function to get a random track from an artist's top tracks
@@ -101,20 +94,37 @@ def hello_sprout():
 
 @app.get("/auth/spotify")
 def spotify_login():
-    auth_url = spotify_oauth.get_authorize_url()
+    spotify_oauth = SpotifyOAuth(
+    client_id=os.getenv("SPOTIFY_CLIENT_ID"),
+    client_secret=os.getenv("SPOTIFY_CLIENT_SECRET"),
+    redirect_uri=os.getenv("SPOTIFY_REDIRECT_URI"),
+    scope="user-top-read user-library-read user-read-recently-played user-read-private",
+    cache_handler=None,
+    )
+    
+    state = secrets.token_urlsafe(16)
+    auth_url = spotify_oauth.get_authorize_url(state=state)
     return {"auth_url": auth_url}
 
 @app.get("/callback")
 def spotify_callback(code: str):
     try: 
-        token_info = spotify_oauth.get_access_token(code)
+        spotify_oauth = SpotifyOAuth(
+        client_id=os.getenv("SPOTIFY_CLIENT_ID"),
+        client_secret=os.getenv("SPOTIFY_CLIENT_SECRET"),
+        redirect_uri=os.getenv("SPOTIFY_REDIRECT_URI"),
+        scope="user-top-read user-library-read user-read-recently-played user-read-private",
+        cache_handler=None,
+        )
+        token_info = spotify_oauth.get_access_token(code, check_cache=False)
         access_token = token_info['access_token']
         nexturl = os.getenv("NEXT_PUBLIC_API_URL")
         
         frontend_url = f"{nexturl}/callback?token={access_token}"
         return RedirectResponse(url=frontend_url)
     except Exception as e:
-        return RedirectResponse(url=f"{nexturl}/error=auth_failed")
+        nexturl = os.getenv("NEXT_PUBLIC_API_URL", "/")
+        return RedirectResponse(url=f"{nexturl}/error?message=auth_failed")
 
 @app.get("/user/top-artists")
 def get_top_artists(access_token: str):
